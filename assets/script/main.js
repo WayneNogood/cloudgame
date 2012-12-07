@@ -1,19 +1,10 @@
 var width = 900,
-//width of the canvas
-  height = 600,
-//height of the canvas
-
-  c = document.getElementById('c'), 
-//canvas itself 
-
-  ctx = c.getContext('2d');
-//and two-dimensional graphic context of the
-//canvas, the only one supported by all 
-//browsers for now
-
+height = 600,
+c = document.getElementById('c'), 
+ctx = c.getContext('2d');
 c.width = width;
 c.height = height;
-//setting canvas size 
+
 
 var clear = function(){
   ctx.fillStyle = '#d0e7f9';
@@ -32,32 +23,33 @@ var clear = function(){
 
 
 var MoveCloud = function(deltaY){
-  
+   
 };
 
-var MakeCloud=function (){
+var MakeDeathCloud=function (x, y, z, a){
     ctx.beginPath();
-    ctx.moveTo(170, 80);
-    ctx.bezierCurveTo(130, 100, 130, 150, 230, 150);
-    ctx.bezierCurveTo(250, 180, 320, 180, 340, 150);
-    ctx.bezierCurveTo(420, 150, 420, 120, 390, 100);
-    ctx.bezierCurveTo(430, 40, 370, 30, 340, 50);
-    ctx.bezierCurveTo(320, 5, 250, 20, 250, 50);
-    ctx.bezierCurveTo(200, 5, 150, 20, 170, 80);
+    ctx.moveTo(x + z, y + a);
+    ctx.bezierCurveTo(130 + z, 100 + a, 130 + z, 150 + a, 230 + z, 150 + a);
+    ctx.bezierCurveTo(250 + z, 180 + a, 320 + z, 180 + a, 340 + z, 150 + a);
+    ctx.bezierCurveTo(420 + z, 150 + a, 420 + z, 120 + a, 390 + z, 100 + a);
+    ctx.bezierCurveTo(430 + z,  40 + a, 370 + z,  30 + a, 340 + z,  50 + a);
+    ctx.bezierCurveTo(320 + z,   5 + a, 250 + z,  20 + a, 250 + z,  50 + a);
+    ctx.bezierCurveTo(200 + z,   5 + a, 150 + z,  20 + a, 170 + z,  80 + a);
     ctx.closePath();
     ctx.lineWidth = 5;
-    ctx.fillStyle = '#e6e6e6';
+    ctx.fillStyle = '#bbb';
     ctx.fill();
-    ctx.strokeStyle = '#eee';
+    ctx.strokeStyle = '#aaa';
     ctx.stroke();
-
 } 
 
 
 var GameLoop = function(){
   clear();
-  MoveCloud(5);
-  MakeCloud();
-  //gLoop = setTimeout(GameLoop, 1000 / 50);
+  MoveCloud();
+  
+  MakeDeathCloud(170, 80, 20, 10);
+  
+  gLoop = setTimeout(GameLoop, 1000 / 50);
 }
 GameLoop();
