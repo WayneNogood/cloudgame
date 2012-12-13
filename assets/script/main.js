@@ -8,17 +8,13 @@ c.height = height;
 
 var clear = function(){
   ctx.fillStyle = '#d0e7f9';
-//clear whole surface
   ctx.beginPath();
-//start drawing
   ctx.rect(0, 0, width, height);
-//draw rectangle from point (0, 0) to
-//(width, height) covering whole canvas
   ctx.closePath();
-//end drawing
   ctx.fill();
-//fill rectangle with active
-//color selected before
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#bbb';
+  ctx.stroke();
 }
 
 
