@@ -4,7 +4,9 @@ c = document.getElementById('c'),
 ctx = c.getContext('2d');
 c.width = width;
 c.height = height;
-
+var x =  400;
+var y = 15;
+var speed = 3;
 
 var clear = function(){
   ctx.fillStyle = '#d0e7f9';
@@ -22,7 +24,7 @@ var MoveCloud = function(deltaY){
    
 };
 
-var MakeDeathCloud=function (x, y, z, a){
+var DeathCloud=function (x, y, z, a){
     ctx.beginPath();
     ctx.moveTo(x + z, y + a);
     ctx.bezierCurveTo(130 + z, 100 + a, 130 + z, 150 + a, 230 + z, 150 + a);
@@ -39,13 +41,83 @@ var MakeDeathCloud=function (x, y, z, a){
     ctx.stroke();
 } 
 
+var lightning = function(x, y){
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x + 55, y + 105);
+  ctx.lineTo(x + 25, y + 205);
+  ctx.lineTo(x + 65, y + 405);
+  ctx.lineTo(x + 50, y + 205);
+  ctx.lineTo(x + 85, y + 105);
+  ctx.lineTo(x + 35, y);
+  //ctx.closePath();
+  ctx.lineWidth = 2;
+  ctx.fillStyle = '#FFFF00';
+  ctx.fill();
+  ctx.strokeStyle = '#F4FA58';
+  ctx.stroke();
+}
+
+function LightUpGround(){
+  ctx.fillStyle = '#FFFF00';
+  ctx.beginPath();
+  ctx.rect(0, 590, width, 10);
+  ctx.closePath();
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#FFFF00';
+  ctx.stroke();
+}
+
+
+function Strike()
+{
+  strike = randomNumberBetween(-300, 900);
+
+    if(x >= strike && x <= strike + 20){
+      var strike = lightning(270 + x, 185);
+      LightUpGround();
+    }
+}
+
+function BounceSideToSide(){
+  if(x <= -500 || x >= 775){
+        speed = -speed;
+    }
+}
+
+function MoveAcrossScreen(){
+  if(x >= 770){
+        x = -400;
+    }
+}
+
+
+var cloudTypes = function(){}
+
+function randomNumberBetween (min, max) {
+    return Math.random() * (max - min) + min;
+}
 
 var GameLoop = function(){
   clear();
-  MoveCloud();
-  
-  MakeDeathCloud(170, 80, 20, 10);
-  
-  gLoop = setTimeout(GameLoop, 1000 / 50);
+
+  reqAnimFrame = window.mozRequestAnimationFrame    ||
+                window.webkitRequestAnimationFrame ||
+                window.msRequestAnimationFrame     ||
+                window.oRequestAnimationFrame;
+
+    reqAnimFrame(GameLoop);
+    x += speed;
+
+    //backwards and forwards
+    //BounceSideToSide();
+    MoveAcrossScreen();
+    Strike();
+    
+    var cloud = DeathCloud(170, 80, 0 + x , 0 + y);  
+    //var cloud = DeathCloud(170, 80, 70 + x , 70 + y);
+    //if(x == -200)
+    //  speed = 0;
 }
 GameLoop();
