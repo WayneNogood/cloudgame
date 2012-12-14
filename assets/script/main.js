@@ -126,7 +126,7 @@ GameLoop();
 
 function  drawAccountant(){
 
-   positionX = 0;
+   positionX = 200;
    positionY = 490;
 
    // draw circle for head
@@ -143,35 +143,35 @@ function  drawAccountant(){
     // torso
     ctx.beginPath();
     ctx.moveTo(centerX,50+positionY);
-    ctx.lineTo(centerX,100 + positionY);
+    ctx.lineTo(centerX,90 + positionY);
     ctx.lineWidth = 3;
     ctx.strokeStyle = "#000000"; 
     ctx.lineCap = "round";
     ctx.stroke();
-/*
+
    // image right arm
     ctx.beginPath();
-    ctx.moveTo(centerX, 100);
-    ctx.lineTo(175-positionX,140-positionY);
-    ctx.lineWidth = 10;
+    ctx.moveTo(centerX, 560);
+    ctx.lineTo(positionX-20,positionY +80);
+    ctx.lineWidth = 3;
     ctx.strokeStyle = "#000000"; 
     ctx.lineCap = "round";
     ctx.stroke();
 
    // image left arm
     ctx.beginPath();
-    ctx.moveTo(centerX, 100);
-    ctx.lineTo(225+positionX,140-positionY);
-    ctx.lineWidth = 10;
+    ctx.moveTo(centerX, 560);
+    ctx.lineTo(20+positionX,positionY + 80);
+    ctx.lineWidth = 3;
     ctx.strokeStyle = "#000000"; 
     ctx.lineCap = "round";
     ctx.stroke();
 
    // image right leg
     ctx.beginPath();
-    ctx.moveTo(centerX, 175);
-    ctx.lineTo(190-positionX,250-positionY);
-    ctx.lineWidth = 10;
+    ctx.moveTo(centerX, 580);
+    ctx.lineTo(positionX-50,positionY + 180);
+    ctx.lineWidth = 3;
     ctx.strokeStyle = "#000000"; 
     ctx.lineCap = "round";
     ctx.stroke();
@@ -179,13 +179,13 @@ function  drawAccountant(){
 
    // image left leg
     ctx.beginPath();
-    ctx.moveTo(centerX, 175);
-    ctx.lineTo(210+positionX,250-positionY);
-    ctx.lineWidth = 10;
+    ctx.moveTo(centerX, 580);
+    ctx.lineTo(positionX+50,positionY + 180);
+    ctx.lineWidth = 3;
     ctx.strokeStyle = "#000000"; 
     ctx.lineCap = "round";
     ctx.stroke();
 
     ctx.restore();
-*/
+
 };
