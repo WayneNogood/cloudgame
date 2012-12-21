@@ -78,7 +78,7 @@ function Strike()
   strike = randomNumberBetween(-300, 900);
   
     if(x >= strike && x <= strike + 20){
-      var strike = lightning(270 + x, 185);
+      lightning(270 + x, 185);
       strikeZone = strike;
       LightUpGround();
     }
@@ -132,7 +132,7 @@ GameLoop();
 //function
 
 function ShouldIKillPerson(){
-  var isDead = strikeZone >= 600;
+  var isDead = strikeZone >= 0 && strikeZone <= 100;
   strikeZone = -1000; 
   return isDead;
 }
