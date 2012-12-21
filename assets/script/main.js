@@ -7,6 +7,8 @@ c.height = height;
 var x =  400;
 var y = 15;
 var speed = 3;
+var walkPace = -1;
+var strikeZone = -1000;
 
 var clear = function(){
   ctx.fillStyle = '#d0e7f9';
@@ -70,12 +72,14 @@ function LightUpGround(){
 }
 
 
+
 function Strike()
 {
   strike = randomNumberBetween(-300, 900);
-
+  
     if(x >= strike && x <= strike + 20){
       var strike = lightning(270 + x, 185);
+      strikeZone = strike;
       LightUpGround();
     }
 }
@@ -102,10 +106,7 @@ function randomNumberBetween (min, max) {
 var GameLoop = function(){
   clear();
 
-  reqAnimFrame = window.mozRequestAnimationFrame    ||
-                window.webkitRequestAnimationFrame ||
-                window.msRequestAnimationFrame     ||
-                window.oRequestAnimationFrame;
+  reqAnimFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
 
     reqAnimFrame(GameLoop);
     x += speed;
@@ -116,21 +117,37 @@ var GameLoop = function(){
     Strike();
     
     var cloud = DeathCloud(170, 80, 0 + x , 0 + y);  
-    drawAccountant();
+    drawAccountant(400 , 490);
+
+    if(ShouldIKillPerson()){
+      KillPerson();
+    }
+
     //var cloud = DeathCloud(170, 80, 70 + x , 70 + y);
     //if(x == -200)
     //  speed = 0;
 }
 GameLoop();
 
+//function
 
-function  drawAccountant(){
+function ShouldIKillPerson(){
+  var isDead = strikeZone >= 600;
+  strikeZone = -1000; 
+  return isDead;
+}
 
-   positionX = 200;
-   positionY = 490;
+function KillPerson(){
+  alert("Dead");
+}
+
+function  drawAccountant(posx, posy){
+
+   positionX = posx;
+   positionY = posy;
 
    // draw circle for head
-   var centerX = 200;
+   var centerX = posx;
    var centerY = 50;
    var radius = 8;
 
