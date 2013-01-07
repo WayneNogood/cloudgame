@@ -13,6 +13,7 @@ var strikeZone = -1000;
 var accountantX       = 800;
 var accountantSpeed   = 2;
 var accountantMoving  = 0; // -1 0, +1
+var accountantColor   = "#000000";
 
 var clear = function(){
   ctx.fillStyle = '#d0e7f9';
@@ -156,6 +157,10 @@ function ShouldIKillPerson(){
 
 function KillPerson(){
   console.log("Dead");
+  accountantColor = "#ff0000";
+  setTimeout(function () {
+    accountantColor = "#000000";
+  }, 1000);
 }
 
 function  drawAccountant(posx, posy){
@@ -170,7 +175,7 @@ function  drawAccountant(posx, posy){
 
    ctx.beginPath();
    ctx.arc(centerX, centerY+positionY, radius, 0, 2 * Math.PI, false);
-   ctx.fillStyle = "#000000";
+   ctx.fillStyle = accountantColor;
    ctx.fill();
    ctx.lineWidth = 5;
 
@@ -179,7 +184,7 @@ function  drawAccountant(posx, posy){
     ctx.moveTo(centerX,50+positionY);
     ctx.lineTo(centerX,90 + positionY);
     ctx.lineWidth = 3;
-    ctx.strokeStyle = "#000000"; 
+    ctx.strokeStyle = accountantColor;
     ctx.lineCap = "round";
     ctx.stroke();
 
@@ -188,7 +193,7 @@ function  drawAccountant(posx, posy){
     ctx.moveTo(centerX, 560);
     ctx.lineTo(positionX-20,positionY +80);
     ctx.lineWidth = 3;
-    ctx.strokeStyle = "#000000"; 
+    ctx.strokeStyle = accountantColor;
     ctx.lineCap = "round";
     ctx.stroke();
 
@@ -197,7 +202,7 @@ function  drawAccountant(posx, posy){
     ctx.moveTo(centerX, 560);
     ctx.lineTo(20+positionX,positionY + 80);
     ctx.lineWidth = 3;
-    ctx.strokeStyle = "#000000"; 
+    ctx.strokeStyle = accountantColor;
     ctx.lineCap = "round";
     ctx.stroke();
 
@@ -206,7 +211,7 @@ function  drawAccountant(posx, posy){
     ctx.moveTo(centerX, 580);
     ctx.lineTo(positionX-50,positionY + 180);
     ctx.lineWidth = 3;
-    ctx.strokeStyle = "#000000"; 
+    ctx.strokeStyle = accountantColor;
     ctx.lineCap = "round";
     ctx.stroke();
 
@@ -216,10 +221,9 @@ function  drawAccountant(posx, posy){
     ctx.moveTo(centerX, 580);
     ctx.lineTo(positionX+50,positionY + 180);
     ctx.lineWidth = 3;
-    ctx.strokeStyle = "#000000"; 
+    ctx.strokeStyle = accountantColor;
     ctx.lineCap = "round";
     ctx.stroke();
 
     ctx.restore();
-
 };
