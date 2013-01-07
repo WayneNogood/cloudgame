@@ -10,6 +10,10 @@ var speed = 3;
 var walkPace = -1;
 var strikeZone = -1000;
 
+var accountantX       = 800;
+var accountantSpeed   = 2;
+var accountantMoving  = 0; // -1 0, +1
+
 var clear = function(){
   ctx.fillStyle = '#d0e7f9';
   ctx.beginPath();
@@ -79,7 +83,7 @@ function Strike()
   
     if(x >= strike && x <= strike + 20){
       lightning(270 + x, 185);
-      strikeZone = strike;
+      strikeZone = strike + 335; // the point where it hits
       LightUpGround();
     }
 }
@@ -117,7 +121,9 @@ var GameLoop = function(){
     Strike();
     
     var cloud = DeathCloud(170, 80, 0 + x , 0 + y);  
-    drawAccountant(400 , 490);
+
+    MoveAccountant();
+    drawAccountant(accountantX , 490);
 
     if(ShouldIKillPerson()){
       KillPerson();
@@ -129,16 +135,27 @@ var GameLoop = function(){
 }
 GameLoop();
 
+Mousetrap.bind("left", function() {accountantMoving = -1}, "keydown");
+Mousetrap.bind("left", function() {accountantMoving = 0}, "keyup");
+Mousetrap.bind("right", function() {accountantMoving = 1}, "keydown");
+Mousetrap.bind("right", function() {accountantMoving = 0}, "keyup");
+
+function MoveAccountant() {
+  accountantX += accountantSpeed * accountantMoving;
+  if (accountantX < 0) accountantX = 0;
+  if (accountantX > 900) accountantX = 900;
+
+}
 //function
 
 function ShouldIKillPerson(){
-  var isDead = strikeZone >= 0 && strikeZone <= 100;
+  var isDead = strikeZone >= accountantX-50 && strikeZone <= accountantX + 50;
   strikeZone = -1000; 
   return isDead;
 }
 
 function KillPerson(){
-  alert("Dead");
+  console.log("Dead");
 }
 
 function  drawAccountant(posx, posy){
