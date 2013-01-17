@@ -1,36 +1,28 @@
+/*******************************/
+/* CONSTANTS
+/*******************************/
 var width = 900,
 height = 600,
 c = document.getElementById('c'), 
 ctx = c.getContext('2d');
 c.width = width;
 c.height = height;
-var x =  400;
+var x = 400;
 var y = 15;
 var speed = 3;
 var walkPace = -1;
 var strikeZone = -1000;
-
 var accountantX       = 800;
 var accountantSpeed   = 2;
 var accountantMoving  = 0; // -1 0, +1
 var accountantColor   = "#000000";
 
-var clear = function(){
-  ctx.fillStyle = '#d0e7f9';
-  ctx.beginPath();
-  ctx.rect(0, 0, width, height);
-  ctx.closePath();
-  ctx.fill();
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = '#bbb';
-  ctx.stroke();
-}
-
-
-var MoveCloud = function(deltaY){
-   
-};
-
+/*******************************/
+/* Weather effects
+/*******************************/
+/*******************************/
+/* Death cloud
+/*******************************/
 var DeathCloud=function (x, y, z, a){
     ctx.beginPath();
     ctx.moveTo(x + z, y + a);
@@ -48,6 +40,12 @@ var DeathCloud=function (x, y, z, a){
     ctx.stroke();
 } 
 
+
+var cloudTypes = function(){}
+
+/*******************************/
+/* Ligntning
+/*******************************/
 var lightning = function(x, y){
   ctx.beginPath();
   ctx.moveTo(x, y);
@@ -57,12 +55,22 @@ var lightning = function(x, y){
   ctx.lineTo(x + 50, y + 205);
   ctx.lineTo(x + 85, y + 105);
   ctx.lineTo(x + 35, y);
-  //ctx.closePath();
   ctx.lineWidth = 2;
   ctx.fillStyle = '#FFFF00';
   ctx.fill();
   ctx.strokeStyle = '#F4FA58';
   ctx.stroke();
+}
+
+function Strike()
+{
+  strike = randomNumberBetween(-300, 900);
+  
+    if(x >= strike && x <= strike + 20){
+      lightning(270 + x, 185);
+      strikeZone = strike + 335; // the point where it hits
+      LightUpGround();
+    }
 }
 
 function LightUpGround(){
@@ -76,19 +84,9 @@ function LightUpGround(){
   ctx.stroke();
 }
 
-
-
-function Strike()
-{
-  strike = randomNumberBetween(-300, 900);
-  
-    if(x >= strike && x <= strike + 20){
-      lightning(270 + x, 185);
-      strikeZone = strike + 335; // the point where it hits
-      LightUpGround();
-    }
-}
-
+/*******************************/
+/* MOVEMENT
+/*******************************/
 function BounceSideToSide(){
   if(x <= -500 || x >= 775){
         speed = -speed;
@@ -102,53 +100,16 @@ function MoveAcrossScreen(){
 }
 
 
-var cloudTypes = function(){}
-
-function randomNumberBetween (min, max) {
-    return Math.random() * (max - min) + min;
-}
-
-var GameLoop = function(){
-  clear();
-
-  reqAnimFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
-
-    reqAnimFrame(GameLoop);
-    x += speed;
-
-    //backwards and forwards
-    //BounceSideToSide();
-    MoveAcrossScreen();
-    Strike();
-    
-    var cloud = DeathCloud(170, 80, 0 + x , 0 + y);  
-
-    MoveAccountant();
-    drawAccountant(accountantX , 490);
-
-    if(ShouldIKillPerson()){
-      KillPerson();
-    }
-
-    //var cloud = DeathCloud(170, 80, 70 + x , 70 + y);
-    //if(x == -200)
-    //  speed = 0;
-}
-GameLoop();
-
-Mousetrap.bind("left", function() {accountantMoving = -1}, "keydown");
-Mousetrap.bind("left", function() {accountantMoving = 0}, "keyup");
-Mousetrap.bind("right", function() {accountantMoving = 1}, "keydown");
-Mousetrap.bind("right", function() {accountantMoving = 0}, "keyup");
-
 function MoveAccountant() {
   accountantX += accountantSpeed * accountantMoving;
   if (accountantX < 0) accountantX = 0;
   if (accountantX > 900) accountantX = 900;
 
 }
-//function
 
+/*******************************/
+/* Kill methods
+/*******************************/
 function ShouldIKillPerson(){
   var isDead = strikeZone >= accountantX-50 && strikeZone <= accountantX + 50;
   strikeZone = -1000; 
@@ -163,6 +124,9 @@ function KillPerson(){
   }, 1000);
 }
 
+/*******************************/
+/* Accountant draw methods 
+/*******************************/
 function  drawAccountant(posx, posy){
 
    positionX = posx;
@@ -227,3 +191,62 @@ function  drawAccountant(posx, posy){
 
     ctx.restore();
 };
+
+/*******************************/
+/* Utillity
+/*******************************/
+var clear = function(){
+  ctx.fillStyle = '#d0e7f9';
+  ctx.beginPath();
+  ctx.rect(0, 0, width, height);
+  ctx.closePath();
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#bbb';
+  ctx.stroke();
+}
+
+function BindMouseEvents(){
+  Mousetrap.bind("left", function() {accountantMoving = -1}, "keydown");
+  Mousetrap.bind("left", function() {accountantMoving = 0}, "keyup");
+  Mousetrap.bind("right", function() {accountantMoving = 1}, "keydown");
+  Mousetrap.bind("right", function() {accountantMoving = 0}, "keyup");
+}
+
+
+/*******************************/
+/* MAIN
+/*******************************/
+var GameLoop = function(){
+  clear();
+
+  reqAnimFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
+  reqAnimFrame(GameLoop);
+  x += speed;
+
+  //backwards and forwards
+  //BounceSideToSide();
+  MoveAcrossScreen();
+  Strike();
+  
+  var cloud = DeathCloud(170, 80, 0 + x , 0 + y);  
+
+  MoveAccountant();
+  drawAccountant(accountantX , 490);
+
+  if(ShouldIKillPerson()){
+    KillPerson();
+  }
+}
+
+
+
+/*******************************/
+/* RUN MAIN
+/*******************************/
+GameLoop();
+BindMouseEvents();
+
+
+
+
