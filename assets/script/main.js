@@ -11,7 +11,7 @@ var score = document.getElementById('score');
 var ctxScore = score.getContext('2d');
 
 var width = 900;
-var infoWidth = 200;
+var infoWidth = 250;
 var height = 600;
 main.width = width;
 main.height = height;
@@ -45,7 +45,7 @@ var lightningPosition = 270 ;
 var deathCloudSpeed = 0.5;
 
 var NumberOfDeaths = 0;
-var NumberfDeathsAllowed = 2;
+var NumberfDeathsAllowed = 3;
 
 var startTime = new Date().getTime();
 
@@ -53,6 +53,8 @@ var level1 = 1;
 var level2 = 1.5;
 var currentLevel = level1;
 var speedIncrementStepSize = 2000;
+var lightningKillStrength = 20;
+var widthOfDeathZone = 20;
 
 DebugOn = true;
 
@@ -76,8 +78,20 @@ var speedIncrement = function(){
   var isIncrementTime = time % speedIncrementStepSize;
  
   if(isIncrementTime < 10){   
-    if(deathCloudSpeed < 4){
+    if(deathCloudSpeed < 4){//this hard codes the max speed to < 4
       deathCloudSpeed += 0.1;
+    }
+  }
+}
+
+var lightningEaseOfKill = function(){
+  var currentTime = new Date().getTime();
+  var time = currentTime - startTime;
+  var isIncrementTime = time % lightningKillStrength;
+ 
+  if(isIncrementTime < 10){   
+    if(widthOfDeathZone < 200){//this hard codes the kill distance to +- 200
+      widthOfDeathZone += 0.01;
     }
   }
 }
@@ -178,7 +192,7 @@ function MoveAccountant() {
 /* Kill methods
 /*******************************/
 function ShouldIKillPerson(){
-  var isDead = strikeZone >= accountantX-50 && strikeZone <= accountantX + 50;
+  var isDead = strikeZone >= accountantX-widthOfDeathZone && strikeZone <= accountantX+widthOfDeathZone;
   strikeZone = -1000; 
   return isDead;
 }
@@ -290,8 +304,10 @@ function ShowDebugInformation(){
     ctxDebug.fillText("startTime = " + startTime, x, y * 13);
     ctxDebug.fillText("score = " + Score(), x, y * 14);
     ctxDebug.fillText("currentLevel = " + currentLevel, x, y * 15);
-    ctxDebug.fillText("speedIncrement = " + speedIncrement(), x, y * 16);
-    ctxDebug.fillText("speedIncrementStepSize = " + speedIncrementStepSize, x, y * 17);
+
+    ctxDebug.fillText("speedIncrementStepSize = " + speedIncrementStepSize, x, y * 16);
+    ctxDebug.fillText("widthOfDeathZone = " + widthOfDeathZone, x, y * 17);
+    ctxDebug.fillText("lightningKillStrength = " + lightningKillStrength, x, y * 18);
 
 }
 
@@ -344,6 +360,9 @@ var GameLoop = function(){
   
   reqAnimFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
   reqAnimFrame(GameLoop);
+
+    speedIncrement();
+    lightningEaseOfKill();
 
     deathCloudx += deathCloudSpeed ;
   
