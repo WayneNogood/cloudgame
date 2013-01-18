@@ -38,14 +38,50 @@ var lightningStroke = '#F4FA58'
 var strikeZone = -1000;
 var accountantX = 40;
 
-var deathCloudx = 0;
-var deathCloudy = 0;
+var deathCloudx = -400;
+var deathCloudy = -10;
 var lightningHeight = 170 + deathCloudy;
 var lightningPosition = 270 ;
+var deathCloudSpeed = 0.5;
 
 var NumberOfDeaths = 0;
+var NumberfDeathsAllowed = 2;
+
+var startTime = new Date().getTime();
+
+var level1 = 1;
+var level2 = 1.5;
+var currentLevel = level1;
+var speedIncrementStepSize = 2000;
 
 DebugOn = true;
+
+/*******************************/
+/* Scoring
+/*******************************/
+
+var Score = function(){
+  var currentTime = new Date().getTime();
+  return Math.floor((currentTime - startTime) * currentLevel/ 10);
+}
+
+
+/*******************************/
+/* level hardness controls
+/*******************************/
+
+var speedIncrement = function(){
+  var currentTime = new Date().getTime();
+  var time = currentTime - startTime;
+  var isIncrementTime = time % speedIncrementStepSize;
+ 
+  if(isIncrementTime < 10){   
+    if(deathCloudSpeed < 4){
+      deathCloudSpeed += 0.1;
+    }
+  }
+}
+
 
 /*******************************/
 /* Weather effects
@@ -54,7 +90,8 @@ DebugOn = true;
 /* Death cloud
 /*******************************/
 var DeathCloud=function (z, a){
-    var startx = 170, starty = 80;
+    var startx = 170;
+    var starty = 80;
     ctx.beginPath();
     ctx.moveTo(startx + z, starty + a);
     ctx.bezierCurveTo(130 + z, 100 + a, 130 + z, 150 + a, 230 + z, 150 + a);
@@ -64,7 +101,7 @@ var DeathCloud=function (z, a){
     ctx.bezierCurveTo(320 + z,   5 + a, 250 + z,  20 + a, 250 + z,  50 + a);
     ctx.bezierCurveTo(200 + z,   5 + a, 150 + z,  20 + a, 170 + z,  80 + a);
     ctx.closePath();
-    ctx.lineWidth = 5;
+    ctx.lineWidth = 2;
     ctx.fillStyle = deathCloudFill;
     ctx.fill();
     ctx.strokeStyle = deathCloudStroke;
@@ -95,7 +132,7 @@ var lightning = function(startx, starty){
 
 function Strike()
 {
-  strike = randomNumberBetween(-300, width);
+  var strike = randomNumberBetween(-300, width);
   
   if(deathCloudx >= strike && deathCloudx <= strike + 20){
     lightning(lightningPosition + deathCloudx, lightningHeight);
@@ -247,7 +284,32 @@ function ShowDebugInformation(){
     ctxDebug.fillText("lightningPosition = " + lightningPosition , x, y* 7);
     ctxDebug.fillText("DebugOn = " + DebugOn, x, y * 8);
     ctxDebug.fillText("NumberOfDeaths = " + NumberOfDeaths, x, y * 9);
-  }
+    ctxDebug.fillText("NumberfDeathsAllowed = " + NumberfDeathsAllowed, x, y * 10);
+    ctxDebug.fillText("deathCloudSpeed = " + deathCloudSpeed, x, y * 11);
+    ctxDebug.fillText("strikeZone = " + strikeZone, x, y * 12);
+    ctxDebug.fillText("startTime = " + startTime, x, y * 13);
+    ctxDebug.fillText("score = " + Score(), x, y * 14);
+    ctxDebug.fillText("currentLevel = " + currentLevel, x, y * 15);
+    ctxDebug.fillText("speedIncrement = " + speedIncrement(), x, y * 16);
+    ctxDebug.fillText("speedIncrementStepSize = " + speedIncrementStepSize, x, y * 17);
+
+}
+
+/*******************************/
+/* SCORING INFO
+/*******************************/
+function ShowScoringInformation(){
+    
+    var x = 15;
+    var y = 25; 
+    ctxScore.clearRect ( 0 , 0 , infoWidth , height );
+
+    ctxScore.font = "20px sans-serif";
+    ctxScore.fillText("Score: " + Score(), x, y);
+    ctxScore.fillText("Lives Remaining: " + (NumberfDeathsAllowed - NumberOfDeaths), x, y * 2);
+
+}
+
 
 /*******************************/
 /* Utillity
@@ -276,26 +338,41 @@ function BindMouseEvents(){
 /* MAIN
 /*******************************/
 var GameLoop = function(){
-  clear();
+ if(NumberOfDeaths < NumberfDeathsAllowed){ 
 
+  clear();
+  
   reqAnimFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
   reqAnimFrame(GameLoop);
-  deathCloudx += 2;
-  //deathCloudy += 0.3;
 
-  //backwards and forwards
-  //BounceSideToSide();
-  MoveAcrossScreen();
-  Strike();
+    deathCloudx += deathCloudSpeed ;
   
-  var cloud = DeathCloud(deathCloudx , deathCloudy);  
+    //deathCloudy += 0.3;
 
-  MoveAccountant();
-  drawAccountant(accountantX);
+    //backwards and forwards
+    //BounceSideToSide();
+    MoveAcrossScreen();
+    Strike();
+    DeathCloud(deathCloudx , deathCloudy);  
 
-  if(ShouldIKillPerson()){
-    KillPerson();
+    MoveAccountant();
+    drawAccountant(accountantX);
+
+    if(ShouldIKillPerson()){
+      KillPerson();
+    }
+
   }
+  else{
+    ctx.fillStyle = deadAccountantColor;
+    ctx.font = "60px sans-serif";
+    ctx.fillText("Game Over", 300, 330);
+    ctx.font = "40px sans-serif";
+    ctx.fillStyle = '#000';
+    ctx.fillText("Score: " + Score(), 350, 400);
+  }
+  
+  ShowScoringInformation();
 
   ShowDebugInformation(DebugOn);
 }
