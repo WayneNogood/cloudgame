@@ -1,21 +1,51 @@
 /*******************************/
 /* CONSTANTS
 /*******************************/
-var width = 900,
-height = 600,
-c = document.getElementById('c'), 
-ctx = c.getContext('2d');
-c.width = width;
-c.height = height;
-var x = 400;
-var y = 15;
+var main = document.getElementById('main');
+var ctx = main.getContext('2d');
+
+var debug = document.getElementById('debug');
+var ctxDebug = debug.getContext('2d');
+
+var score = document.getElementById('score');
+var ctxScore = score.getContext('2d');
+
+var width = 900;
+var infoWidth = 200;
+var height = 600;
+main.width = width;
+main.height = height;
+debug.width = infoWidth;
+debug.height = height;
+score.width = infoWidth;
+score.height = height;
+
+var moveLeft = -1;
+var moveRight = +1;
+var stop = 0;
 var speed = 3;
-var walkPace = -1;
+var accountantSpeed = 2;
+var accountantDirection = 0; // -1 0, +1
+
+var defaultAccountantColor =  "#000000";
+var deadAccountantColor = "#ff0000";
+var accountantColor = defaultAccountantColor;
+var deathCloudFill = '#bbb';
+var deathCloudStroke = '#aaa'
+var lightningFill = '#FFFF00';
+var lightningStroke = '#F4FA58'
+
 var strikeZone = -1000;
-var accountantX       = 800;
-var accountantSpeed   = 2;
-var accountantMoving  = 0; // -1 0, +1
-var accountantColor   = "#000000";
+var accountantX = 40;
+
+var deathCloudx = 0;
+var deathCloudy = 0;
+var lightningHeight = 170 + deathCloudy;
+var lightningPosition = 270 ;
+
+var NumberOfDeaths = 0;
+
+DebugOn = true;
 
 /*******************************/
 /* Weather effects
@@ -23,9 +53,10 @@ var accountantColor   = "#000000";
 /*******************************/
 /* Death cloud
 /*******************************/
-var DeathCloud=function (x, y, z, a){
+var DeathCloud=function (z, a){
+    var startx = 170, starty = 80;
     ctx.beginPath();
-    ctx.moveTo(x + z, y + a);
+    ctx.moveTo(startx + z, starty + a);
     ctx.bezierCurveTo(130 + z, 100 + a, 130 + z, 150 + a, 230 + z, 150 + a);
     ctx.bezierCurveTo(250 + z, 180 + a, 320 + z, 180 + a, 340 + z, 150 + a);
     ctx.bezierCurveTo(420 + z, 150 + a, 420 + z, 120 + a, 390 + z, 100 + a);
@@ -34,9 +65,9 @@ var DeathCloud=function (x, y, z, a){
     ctx.bezierCurveTo(200 + z,   5 + a, 150 + z,  20 + a, 170 + z,  80 + a);
     ctx.closePath();
     ctx.lineWidth = 5;
-    ctx.fillStyle = '#bbb';
+    ctx.fillStyle = deathCloudFill;
     ctx.fill();
-    ctx.strokeStyle = '#aaa';
+    ctx.strokeStyle = deathCloudStroke;
     ctx.stroke();
 } 
 
@@ -46,41 +77,41 @@ var cloudTypes = function(){}
 /*******************************/
 /* Ligntning
 /*******************************/
-var lightning = function(x, y){
+var lightning = function(startx, starty){
   ctx.beginPath();
-  ctx.moveTo(x, y);
-  ctx.lineTo(x + 55, y + 105);
-  ctx.lineTo(x + 25, y + 205);
-  ctx.lineTo(x + 65, y + 405);
-  ctx.lineTo(x + 50, y + 205);
-  ctx.lineTo(x + 85, y + 105);
-  ctx.lineTo(x + 35, y);
+  ctx.moveTo(startx, starty);
+  ctx.lineTo(startx + 55, starty + 105);
+  ctx.lineTo(startx + 25, starty + 205);
+  ctx.lineTo(startx + 65, starty + 405);
+  ctx.lineTo(startx + 50, starty + 205);
+  ctx.lineTo(startx + 85, starty + 105);
+  ctx.lineTo(startx + 35, starty);
   ctx.lineWidth = 2;
-  ctx.fillStyle = '#FFFF00';
+  ctx.fillStyle = lightningFill;
   ctx.fill();
-  ctx.strokeStyle = '#F4FA58';
+  ctx.strokeStyle = lightningStroke;
   ctx.stroke();
 }
 
 function Strike()
 {
-  strike = randomNumberBetween(-300, 900);
+  strike = randomNumberBetween(-300, width);
   
-    if(x >= strike && x <= strike + 20){
-      lightning(270 + x, 185);
-      strikeZone = strike + 335; // the point where it hits
-      LightUpGround();
-    }
+  if(deathCloudx >= strike && deathCloudx <= strike + 20){
+    lightning(lightningPosition + deathCloudx, lightningHeight);
+    strikeZone = strike + 335; // the point where it hits
+    LightUpGround();
+  }
 }
 
 function LightUpGround(){
-  ctx.fillStyle = '#FFFF00';
+  ctx.fillStyle = lightningFill;
   ctx.beginPath();
   ctx.rect(0, 590, width, 10);
   ctx.closePath();
   ctx.fill();
   ctx.lineWidth = 2;
-  ctx.strokeStyle = '#FFFF00';
+  ctx.strokeStyle = lightningStroke;
   ctx.stroke();
 }
 
@@ -88,23 +119,22 @@ function LightUpGround(){
 /* MOVEMENT
 /*******************************/
 function BounceSideToSide(){
-  if(x <= -500 || x >= 775){
+  if(deathCloudx <= -500 || deathCloudx >= 775){
         speed = -speed;
     }
 }
 
 function MoveAcrossScreen(){
-  if(x >= 770){
-        x = -400;
+  if(deathCloudx >= 770){
+        deathCloudx = -400;
     }
 }
 
 
 function MoveAccountant() {
-  accountantX += accountantSpeed * accountantMoving;
+  accountantX += accountantSpeed * accountantDirection;
   if (accountantX < 0) accountantX = 0;
-  if (accountantX > 900) accountantX = 900;
-
+  if (accountantX > width) accountantX = width;
 }
 
 /*******************************/
@@ -118,19 +148,20 @@ function ShouldIKillPerson(){
 
 function KillPerson(){
   console.log("Dead");
-  accountantColor = "#ff0000";
+  accountantColor = deadAccountantColor;
+  NumberOfDeaths +=1;
   setTimeout(function () {
-    accountantColor = "#000000";
+    accountantColor = defaultAccountantColor;
   }, 1000);
 }
 
 /*******************************/
 /* Accountant draw methods 
 /*******************************/
-function  drawAccountant(posx, posy){
+function  drawAccountant(posx){
 
    positionX = posx;
-   positionY = posy;
+   positionY = 490;
 
    // draw circle for head
    var centerX = posx;
@@ -193,6 +224,32 @@ function  drawAccountant(posx, posy){
 };
 
 /*******************************/
+/* SCORE BOARD
+/*******************************/
+
+
+/*******************************/
+/* DEBUG INFO
+/*******************************/
+function ShowDebugInformation(){
+    
+    var x = 15;
+    var y = 17; 
+    ctxDebug.clearRect ( 0 , 0 , infoWidth , height );
+
+    ctxDebug.font = "12px sans-serif";
+    ctxDebug.fillText("accountantDirection = " + accountantDirection, x, y);
+    ctxDebug.fillText("accountantSpeed = " + accountantSpeed, x, y * 2);
+    ctxDebug.fillText("accountantX = " + accountantX, x, y * 3);
+    ctxDebug.fillText("deathCloudx = " + deathCloudx, x, y * 4);
+    ctxDebug.fillText("deathCloudy = " + deathCloudy, x, y* 5);
+    ctxDebug.fillText("lightningHeight = " + lightningHeight, x, y * 6);
+    ctxDebug.fillText("lightningPosition = " + lightningPosition , x, y* 7);
+    ctxDebug.fillText("DebugOn = " + DebugOn, x, y * 8);
+    ctxDebug.fillText("NumberOfDeaths = " + NumberOfDeaths, x, y * 9);
+  }
+
+/*******************************/
 /* Utillity
 /*******************************/
 var clear = function(){
@@ -207,10 +264,11 @@ var clear = function(){
 }
 
 function BindMouseEvents(){
-  Mousetrap.bind("left", function() {accountantMoving = -1}, "keydown");
-  Mousetrap.bind("left", function() {accountantMoving = 0}, "keyup");
-  Mousetrap.bind("right", function() {accountantMoving = 1}, "keydown");
-  Mousetrap.bind("right", function() {accountantMoving = 0}, "keyup");
+  Mousetrap.bind("left", function() {accountantDirection = moveLeft}, "keydown");
+  Mousetrap.bind("left", function() {accountantDirection = stop}, "keyup");
+  Mousetrap.bind("right", function() {accountantDirection = moveRight}, "keydown");
+  Mousetrap.bind("right", function() {accountantDirection = stop}, "keyup");
+
 }
 
 
@@ -222,21 +280,24 @@ var GameLoop = function(){
 
   reqAnimFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
   reqAnimFrame(GameLoop);
-  x += speed;
+  deathCloudx += 2;
+  //deathCloudy += 0.3;
 
   //backwards and forwards
   //BounceSideToSide();
   MoveAcrossScreen();
   Strike();
   
-  var cloud = DeathCloud(170, 80, 0 + x , 0 + y);  
+  var cloud = DeathCloud(deathCloudx , deathCloudy);  
 
   MoveAccountant();
-  drawAccountant(accountantX , 490);
+  drawAccountant(accountantX);
 
   if(ShouldIKillPerson()){
     KillPerson();
   }
+
+  ShowDebugInformation(DebugOn);
 }
 
 
