@@ -57,6 +57,8 @@ var lightningKillStrength = 20;
 var widthOfDeathZone = 20;
 var maxWidthOfDeathZone = 200;
 
+var ShieldColour = "#00BFFF";
+
 DebugOn = true;
 
 /*******************************/
@@ -193,9 +195,19 @@ function MoveAccountant() {
 /* Kill methods
 /*******************************/
 function ShouldIKillPerson(){
-  var isDead = strikeZone >= accountantX-widthOfDeathZone && strikeZone <= accountantX+widthOfDeathZone;
+  var isDead = strikeZone >= accountantX-widthOfDeathZone 
+  && strikeZone <= accountantX+widthOfDeathZone 
+  && accountantColor != ShieldColour;
   strikeZone = -1000; 
   return isDead;
+}
+
+function AccountantShieldOn(){
+  accountantColor = ShieldColour;
+}
+
+function AccountantShieldOff(){
+  accountantColor = defaultAccountantColor;
 }
 
 function KillPerson(){
@@ -347,6 +359,8 @@ function BindMouseEvents(){
   Mousetrap.bind("left", function() {accountantDirection = stop}, "keyup");
   Mousetrap.bind("right", function() {accountantDirection = moveRight}, "keydown");
   Mousetrap.bind("right", function() {accountantDirection = stop}, "keyup");
+  Mousetrap.bind("a", function() {AccountantShieldOn()}, "keydown");
+  Mousetrap.bind("a", function() {AccountantShieldOff()}, "keyup");
 
 }
 
