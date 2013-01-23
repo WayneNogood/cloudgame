@@ -58,6 +58,8 @@ var widthOfDeathZone = 20;
 var maxWidthOfDeathZone = 200;
 
 var ShieldColour = "#00BFFF";
+var maxShieldTime = 5000;
+var sheildTimeElapsed = maxShieldTime;
 
 DebugOn = true;
 
@@ -195,15 +197,25 @@ function MoveAccountant() {
 /* Kill methods
 /*******************************/
 function ShouldIKillPerson(){
-  var isDead = strikeZone >= accountantX-widthOfDeathZone 
-  && strikeZone <= accountantX+widthOfDeathZone 
-  && accountantColor != ShieldColour;
+  var isDead = IsInStrikeZone() && IsProtected();
   strikeZone = -1000; 
   return isDead;
 }
 
 function AccountantShieldOn(){
-  accountantColor = ShieldColour;
+  if(sheildTimeElapsed > 0){
+      accountantColor = ShieldColour;
+      sheildTimeElapsed -= 500;
+      return;
+  }
+  accountantColor = defaultAccountantColor;
+  AccountantShieldRenew();
+}
+
+function AccountantShieldRenew(){
+  setTimeout(function () {
+    sheildTimeElapsed = maxShieldTime;
+  }, 10000);
 }
 
 function AccountantShieldOff(){
@@ -217,6 +229,13 @@ function KillPerson(){
   setTimeout(function () {
     accountantColor = defaultAccountantColor;
   }, 1000);
+}
+
+function IsInStrikeZone(){
+  return strikeZone >= accountantX-widthOfDeathZone && strikeZone <= accountantX+widthOfDeathZone 
+}
+function IsProtected(){
+  return accountantColor != ShieldColour;
 }
 
 /*******************************/
@@ -336,6 +355,7 @@ function ShowScoringInformation(){
     ctxScore.font = "20px sans-serif";
     ctxScore.fillText("Score: " + Score(), x, y);
     ctxScore.fillText("Lives Remaining: " + (NumberfDeathsAllowed - NumberOfDeaths), x, y * 2);
+    ctxScore.fillText("Shield Time (a): " + (sheildTimeElapsed), x, y * 3);
 
 }
 
