@@ -55,6 +55,7 @@ var currentLevel = level1;
 var speedIncrementStepSize = 2000;
 var lightningKillStrength = 20;
 var widthOfDeathZone = 20;
+var maxWidthOfDeathZone = 200;
 
 DebugOn = true;
 
@@ -90,8 +91,8 @@ var lightningEaseOfKill = function(){
   var isIncrementTime = time % lightningKillStrength;
  
   if(isIncrementTime < 10){   
-    if(widthOfDeathZone < 200){//this hard codes the kill distance to +- 200
-      widthOfDeathZone += 0.01;
+    if(widthOfDeathZone < maxWidthOfDeathZone){//this hard codes the kill distance to +- 200
+      widthOfDeathZone += 0.02;
     }
   }
 }
