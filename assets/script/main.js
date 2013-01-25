@@ -58,8 +58,6 @@ var widthOfDeathZone = 20;
 var maxWidthOfDeathZone = 200;
 
 var ShieldColour = "#00BFFF";
-var maxShieldTime = 5000;
-var sheildTimeElapsed = maxShieldTime;
 
 DebugOn = true;
 
@@ -203,22 +201,16 @@ function ShouldIKillPerson(){
 }
 
 function AccountantShieldOn(){
-  if(sheildTimeElapsed > 0){
-      accountantColor = ShieldColour;
-      sheildTimeElapsed -= 500;
-      return;
-  }
-  accountantColor = defaultAccountantColor;
-  AccountantShieldRenew();
+  shield.turnOn(function() {
+    accountantColor = ShieldColour;
+  });
 }
 
-function AccountantShieldRenew(){
-  setTimeout(function () {
-    sheildTimeElapsed = maxShieldTime;
-  }, 10000);
+function AccountantShieldOff() {
+  shield.turnOff(shieldOff);
 }
 
-function AccountantShieldOff(){
+function shieldOff() {
   accountantColor = defaultAccountantColor;
 }
 
@@ -235,7 +227,7 @@ function IsInStrikeZone(){
   return strikeZone >= accountantX-widthOfDeathZone && strikeZone <= accountantX+widthOfDeathZone 
 }
 function IsProtected(){
-  return accountantColor != ShieldColour;
+  return shield.isOn();
 }
 
 /*******************************/
@@ -355,7 +347,7 @@ function ShowScoringInformation(){
     ctxScore.font = "20px sans-serif";
     ctxScore.fillText("Score: " + Score(), x, y);
     ctxScore.fillText("Lives Remaining: " + (NumberfDeathsAllowed - NumberOfDeaths), x, y * 2);
-    ctxScore.fillText("Shield Time (a): " + (sheildTimeElapsed), x, y * 3);
+    ctxScore.fillText("Shield Time (a): " + (shield.power()), x, y * 3);
 
 }
 
@@ -408,6 +400,8 @@ var GameLoop = function(){
     MoveAcrossScreen();
     Strike();
     DeathCloud(deathCloudx , deathCloudy);  
+
+    shield.tick(shieldOff);
 
     MoveAccountant();
     drawAccountant(accountantX);
