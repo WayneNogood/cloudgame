@@ -38,14 +38,14 @@ var lightningStroke = '#F4FA58'
 var strikeZone = -1000;
 var accountantX = 40;
 
-var deathCloudX = -400;
+var deathCloudx = -400;
 var deathCloudy = -10;
 var lightningHeight = 170 + deathCloudy;
 var lightningPosition = 270 ;
 var deathCloudSpeed = 0.5;
 
 var NumberOfDeaths = 0;
-var NumberOfDeathsAllowed = 3;
+var NumberfDeathsAllowed = 3;
 
 var startTime = new Date().getTime();
 
@@ -58,13 +58,8 @@ var widthOfDeathZone = 20;
 var maxWidthOfDeathZone = 200;
 
 var ShieldColour = "#00BFFF";
-var maxShieldTime = 5000;
-var shieldTimeElapsed = maxShieldTime;
 
 DebugOn = true;
-
-
-
 
 /*******************************/
 /* Scoring
@@ -156,8 +151,8 @@ function Strike()
 {
   var strike = randomNumberBetween(-300, width);
   
-  if(deathCloudX >= strike && deathCloudX <= strike + 20){
-    lightning(lightningPosition + deathCloudX, lightningHeight);
+  if(deathCloudx >= strike && deathCloudx <= strike + 20){
+    lightning(lightningPosition + deathCloudx, lightningHeight);
     strikeZone = strike + 335; // the point where it hits
     LightUpGround();
   }
@@ -178,14 +173,14 @@ function LightUpGround(){
 /* MOVEMENT
 /*******************************/
 function BounceSideToSide(){
-  if(deathCloudX <= -500 || deathCloudX >= 775){
+  if(deathCloudx <= -500 || deathCloudx >= 775){
         speed = -speed;
     }
 }
 
 function MoveAcrossScreen(){
-  if(deathCloudX >= 770){
-        deathCloudX = -400;
+  if(deathCloudx >= 770){
+        deathCloudx = -400;
     }
 }
 
@@ -206,22 +201,16 @@ function ShouldIKillPerson(){
 }
 
 function AccountantShieldOn(){
-  if(shieldTimeElapsed > 0){
-      accountantColor = ShieldColour;
-      shieldTimeElapsed -= 500;
-      return;
-  }
-  accountantColor = defaultAccountantColor;
-  AccountantShieldRenew();
+  shield.turnOn(function() {
+    accountantColor = ShieldColour;
+  });
 }
 
-function AccountantShieldRenew(){
-  setTimeout(function () {
-    shieldTimeElapsed = maxShieldTime;
-  }, 10000);
+function AccountantShieldOff() {
+  shield.turnOff(shieldOff);
 }
 
-function AccountantShieldOff(){
+function shieldOff() {
   accountantColor = defaultAccountantColor;
 }
 
@@ -238,7 +227,7 @@ function IsInStrikeZone(){
   return strikeZone >= accountantX-widthOfDeathZone && strikeZone <= accountantX+widthOfDeathZone 
 }
 function IsProtected(){
-  return accountantColor != ShieldColour;
+  return shield.isOn();
 }
 
 /*******************************/
@@ -327,13 +316,13 @@ function ShowDebugInformation(){
     ctxDebug.fillText("accountantDirection = " + accountantDirection, x, y);
     ctxDebug.fillText("accountantSpeed = " + accountantSpeed, x, y * 2);
     ctxDebug.fillText("accountantX = " + accountantX, x, y * 3);
-    ctxDebug.fillText("deathCloudx = " + deathCloudX, x, y * 4);
+    ctxDebug.fillText("deathCloudx = " + deathCloudx, x, y * 4);
     ctxDebug.fillText("deathCloudy = " + deathCloudy, x, y* 5);
     ctxDebug.fillText("lightningHeight = " + lightningHeight, x, y * 6);
     ctxDebug.fillText("lightningPosition = " + lightningPosition , x, y* 7);
     ctxDebug.fillText("DebugOn = " + DebugOn, x, y * 8);
     ctxDebug.fillText("NumberOfDeaths = " + NumberOfDeaths, x, y * 9);
-    ctxDebug.fillText("NumberfDeathsAllowed = " + NumberOfDeathsAllowed, x, y * 10);
+    ctxDebug.fillText("NumberfDeathsAllowed = " + NumberfDeathsAllowed, x, y * 10);
     ctxDebug.fillText("deathCloudSpeed = " + deathCloudSpeed, x, y * 11);
     ctxDebug.fillText("strikeZone = " + strikeZone, x, y * 12);
     ctxDebug.fillText("startTime = " + startTime, x, y * 13);
@@ -357,8 +346,8 @@ function ShowScoringInformation(){
 
     ctxScore.font = "20px sans-serif";
     ctxScore.fillText("Score: " + Score(), x, y);
-    ctxScore.fillText("Lives Remaining: " + (NumberOfDeathsAllowed - NumberOfDeaths), x, y * 2);
-    ctxScore.fillText("Shield Time (a): " + (shieldTimeElapsed), x, y * 3);
+    ctxScore.fillText("Lives Remaining: " + (NumberfDeathsAllowed - NumberOfDeaths), x, y * 2);
+    ctxScore.fillText("Shield Time (a): " + (shield.power()), x, y * 3);
 
 }
 
@@ -392,7 +381,7 @@ function BindMouseEvents(){
 /* MAIN
 /*******************************/
 var GameLoop = function(){
- if(NumberOfDeaths < NumberOfDeathsAllowed){
+ if(NumberOfDeaths < NumberfDeathsAllowed){ 
 
   clear();
   
@@ -402,7 +391,7 @@ var GameLoop = function(){
     speedIncrement();
     lightningEaseOfKill();
 
-    deathCloudX += deathCloudSpeed ;
+    deathCloudx += deathCloudSpeed ;
   
     //deathCloudy += 0.3;
 
@@ -410,7 +399,9 @@ var GameLoop = function(){
     //BounceSideToSide();
     MoveAcrossScreen();
     Strike();
-    DeathCloud(deathCloudX , deathCloudy);
+    DeathCloud(deathCloudx , deathCloudy);  
+
+    shield.tick(shieldOff);
 
     MoveAccountant();
     drawAccountant(accountantX);
