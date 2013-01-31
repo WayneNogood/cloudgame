@@ -63,6 +63,9 @@ var shieldTimeElapsed = maxShieldTime;
 
 DebugOn = true;
 
+
+
+
 /*******************************/
 /* Scoring
 /*******************************/
