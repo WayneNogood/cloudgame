@@ -9,7 +9,9 @@ var ctxDebug = debug.getContext('2d');
 
 var score = document.getElementById('score');
 var ctxScore = score.getContext('2d');
-
+var moveLeft = -1;
+var moveRight = +1;
+var stop = 0;
 var width = 900;
 var infoWidth = 250;
 var height = 600;
@@ -19,24 +21,14 @@ debug.width = infoWidth;
 debug.height = height;
 score.width = infoWidth;
 score.height = height;
-
-var moveLeft = -1;
-var moveRight = +1;
-var stop = 0;
 var speed = 3;
-var accountantSpeed = 2;
-var accountantDirection = 0; // -1 0, +1
-
-var defaultAccountantColor =  "#000000";
-var deadAccountantColor = "#ff0000";
-var accountantColor = defaultAccountantColor;
 var deathCloudFill = '#bbb';
 var deathCloudStroke = '#aaa';
 var lightningFill = '#FFFF00';
 var lightningStroke = '#F4FA58';
 
 var strikeZone = -1000;
-var accountantX = 40;
+
 
 var deathCloudX = -400;
 var deathCloudY = -10;
@@ -59,7 +51,7 @@ var maxWidthOfDeathZone = 200;
 
 var ShieldColour = "#00BFFF";
 
-DebugOn = true;
+DebugOn = false;
 
 /*******************************/
 /* Scoring
@@ -184,25 +176,18 @@ function MoveAcrossScreen(){
     }
 }
 
-
-function MoveAccountant() {
-  accountantX += accountantSpeed * accountantDirection;
-  if (accountantX < 0) accountantX = 0;
-  if (accountantX > width) accountantX = width;
-}
-
 /*******************************/
 /* Kill methods
 /*******************************/
 function ShouldIKillPerson(){
-  var isDead = IsInStrikeZone() && IsProtected();
+  var isDead = IsInStrikeZone() &! IsProtected();
   strikeZone = -1000; 
   return isDead;
 }
 
 function AccountantShieldOn(){
   shield.turnOn(function() {
-    accountantColor = ShieldColour;
+      accountant.setAccountantColor(ShieldColour);
   });
 }
 
@@ -211,91 +196,24 @@ function AccountantShieldOff() {
 }
 
 function shieldOff() {
-  accountantColor = defaultAccountantColor;
+  accountantColor = accountant.getBaseColour();
+}
+
+function IsProtected(){
+    return shield.isOn();
+}
+
+function IsInStrikeZone(){
+    return strikeZone >= accountant.getpositionX()-widthOfDeathZone && strikeZone <= accountant.getpositionX()+widthOfDeathZone
 }
 
 function KillPerson(){
   console.log("Dead");
-  accountantColor = deadAccountantColor;
+  accountantColor = accountant.getDeadColour();
   NumberOfDeaths +=1;
   setTimeout(function () {
-    accountantColor = defaultAccountantColor;
+    accountantColor = accountant.getBaseColour();
   }, 1000);
-}
-
-function IsInStrikeZone(){
-  return strikeZone >= accountantX-widthOfDeathZone && strikeZone <= accountantX+widthOfDeathZone 
-}
-function IsProtected(){
-  return shield.isOn();
-}
-
-/*******************************/
-/* Accountant draw methods 
-/*******************************/
-function  drawAccountant(posx){
-
-   positionX = posx;
-   positionY = 490;
-
-   // draw circle for head
-   var centerX = positionX;
-   var centerY = 50;
-   var radius = 8;
-
-   ctx.beginPath();
-   ctx.arc(centerX, centerY+positionY, radius, 0, 2 * Math.PI, false);
-   ctx.fillStyle = accountantColor;
-   ctx.fill();
-   ctx.lineWidth = 5;
-
-    // torso
-    ctx.beginPath();
-    ctx.moveTo(centerX,50+positionY);
-    ctx.lineTo(centerX,90 + positionY);
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = accountantColor;
-    ctx.lineCap = "round";
-    ctx.stroke();
-
-   // image right arm
-    ctx.beginPath();
-    ctx.moveTo(centerX, 560);
-    ctx.lineTo(positionX-20,positionY +80);
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = accountantColor;
-    ctx.lineCap = "round";
-    ctx.stroke();
-
-   // image left arm
-    ctx.beginPath();
-    ctx.moveTo(centerX, 560);
-    ctx.lineTo(20+positionX,positionY + 80);
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = accountantColor;
-    ctx.lineCap = "round";
-    ctx.stroke();
-
-   // image right leg
-    ctx.beginPath();
-    ctx.moveTo(centerX, 580);
-    ctx.lineTo(positionX-50,positionY + 180);
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = accountantColor;
-    ctx.lineCap = "round";
-    ctx.stroke();
-
-
-   // image left leg
-    ctx.beginPath();
-    ctx.moveTo(centerX, 580);
-    ctx.lineTo(positionX+50,positionY + 180);
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = accountantColor;
-    ctx.lineCap = "round";
-    ctx.stroke();
-
-    ctx.restore();
 }
 
 /*******************************/
@@ -306,33 +224,34 @@ function  drawAccountant(posx){
 /*******************************/
 /* DEBUG INFO
 /*******************************/
-function ShowDebugInformation(){
+function ShowDebugInformation(show){
     
     var x = 15;
-    var y = 17; 
-    ctxDebug.clearRect ( 0 , 0 , infoWidth , height );
+    var y = 17;
+    if(show){
+        ctxDebug.clearRect ( 0 , 0 , infoWidth , height );
 
-    ctxDebug.font = "12px sans-serif";
-    ctxDebug.fillText("accountantDirection = " + accountantDirection, x, y);
-    ctxDebug.fillText("accountantSpeed = " + accountantSpeed, x, y * 2);
-    ctxDebug.fillText("accountantX = " + accountantX, x, y * 3);
-    ctxDebug.fillText("deathCloudx = " + deathCloudX, x, y * 4);
-    ctxDebug.fillText("deathCloudy = " + deathCloudY, x, y* 5);
-    ctxDebug.fillText("lightningHeight = " + lightningHeight, x, y * 6);
-    ctxDebug.fillText("lightningPosition = " + lightningPosition , x, y* 7);
-    ctxDebug.fillText("DebugOn = " + DebugOn, x, y * 8);
-    ctxDebug.fillText("NumberOfDeaths = " + NumberOfDeaths, x, y * 9);
-    ctxDebug.fillText("NumberfDeathsAllowed = " + NumberOfDeathsAllowed, x, y * 10);
-    ctxDebug.fillText("deathCloudSpeed = " + deathCloudSpeed, x, y * 11);
-    ctxDebug.fillText("strikeZone = " + strikeZone, x, y * 12);
-    ctxDebug.fillText("startTime = " + startTime, x, y * 13);
-    ctxDebug.fillText("score = " + Score(), x, y * 14);
-    ctxDebug.fillText("currentLevel = " + currentLevel, x, y * 15);
+        ctxDebug.font = "12px sans-serif";
+        ctxDebug.fillText("accountantDirection = " + accountantDirection, x, y);
+        ctxDebug.fillText("accountantSpeed = " + accountantSpeed, x, y * 2);
+        ctxDebug.fillText("accountantX = " + accountantX, x, y * 3);
+        ctxDebug.fillText("deathCloudX = " + deathCloudX, x, y * 4);
+        ctxDebug.fillText("deathCloudY = " + deathCloudY, x, y* 5);
+        ctxDebug.fillText("lightningHeight = " + lightningHeight, x, y * 6);
+        ctxDebug.fillText("lightningPosition = " + lightningPosition , x, y* 7);
+        ctxDebug.fillText("DebugOn = " + DebugOn, x, y * 8);
+        ctxDebug.fillText("NumberOfDeaths = " + NumberOfDeaths, x, y * 9);
+        ctxDebug.fillText("NumberOfDeathsAllowed = " + NumberOfDeathsAllowed, x, y * 10);
+        ctxDebug.fillText("deathCloudSpeed = " + deathCloudSpeed, x, y * 11);
+        ctxDebug.fillText("strikeZone = " + strikeZone, x, y * 12);
+        ctxDebug.fillText("startTime = " + startTime, x, y * 13);
+        ctxDebug.fillText("score = " + Score(), x, y * 14);
+        ctxDebug.fillText("currentLevel = " + currentLevel, x, y * 15);
 
-    ctxDebug.fillText("speedIncrementStepSize = " + speedIncrementStepSize, x, y * 16);
-    ctxDebug.fillText("widthOfDeathZone = " + widthOfDeathZone, x, y * 17);
-    ctxDebug.fillText("lightningKillStrength = " + lightningKillStrength, x, y * 18);
-
+        ctxDebug.fillText("speedIncrementStepSize = " + speedIncrementStepSize, x, y * 16);
+        ctxDebug.fillText("widthOfDeathZone = " + widthOfDeathZone, x, y * 17);
+        ctxDebug.fillText("lightningKillStrength = " + lightningKillStrength, x, y * 18);
+    }
 }
 
 /*******************************/
@@ -367,10 +286,10 @@ var clear = function(){
 }
 
 function BindMouseEvents(){
-  Mousetrap.bind("left", function() {accountantDirection = moveLeft}, "keydown");
-  Mousetrap.bind("left", function() {accountantDirection = stop}, "keyup");
-  Mousetrap.bind("right", function() {accountantDirection = moveRight}, "keydown");
-  Mousetrap.bind("right", function() {accountantDirection = stop}, "keyup");
+  Mousetrap.bind("left", function() {accountant.direction(moveLeft)}, "keydown");
+  Mousetrap.bind("left", function() {accountant.direction(stop)}, "keyup");
+  Mousetrap.bind("right", function() {accountant.direction(moveRight)}, "keydown");
+  Mousetrap.bind("right", function() {accountant.direction(stop)}, "keyup");
   Mousetrap.bind("a", function() {AccountantShieldOn()}, "keydown");
   Mousetrap.bind("a", function() {AccountantShieldOff()}, "keyup");
 
@@ -383,28 +302,23 @@ function BindMouseEvents(){
 var GameLoop = function(){
  if(NumberOfDeaths < NumberOfDeathsAllowed){
 
-  clear();
-  
-  reqAnimFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
-  reqAnimFrame(GameLoop);
+    clear();
+    reqAnimFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
+    reqAnimFrame(GameLoop);
 
     speedIncrement();
     lightningEaseOfKill();
 
     deathCloudX += deathCloudSpeed ;
-  
-    //deathCloudy += 0.3;
 
-    //backwards and forwards
-    //BounceSideToSide();
     MoveAcrossScreen();
     Strike();
     DeathCloud(deathCloudX , deathCloudY);
 
     shield.tick(shieldOff);
 
-    MoveAccountant();
-    drawAccountant(accountantX);
+    accountant.move();
+    accountant.create();
 
     if(ShouldIKillPerson()){
       KillPerson();
@@ -421,7 +335,6 @@ var GameLoop = function(){
   }
   
   ShowScoringInformation();
-
   ShowDebugInformation(DebugOn);
 };
 

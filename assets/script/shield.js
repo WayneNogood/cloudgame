@@ -2,7 +2,7 @@ var shield = (function() {
 	var SHIELD_MAX = 5000;
 	var SHIELD_MIN = 251; // must be more than this to turn on
 	var SHIELD_DEPLETION_SPEED = 1750; // units per second
-	var SHIELD_RECHARGE_SPEED = 900; // units per second
+	var SHIELD_RECHARGE_SPEED = 500; // units per second
 
 	var shieldOn = false;
 	var shieldValue = SHIELD_MAX;
@@ -32,6 +32,7 @@ var shield = (function() {
 				// did the shield run out?
 				if (shieldValue <= 0) {
 					shieldValue = 0;
+                    shieldOn = false;
 					f && f();
 				}
 			} else {
@@ -48,7 +49,7 @@ var shield = (function() {
 			return shieldValue;
 		},
 		isOn: function() {
-			return shieldValue > 0;
+			return shieldOn;
 		}
 
 	};
