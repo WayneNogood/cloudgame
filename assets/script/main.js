@@ -51,7 +51,7 @@ var maxWidthOfDeathZone = 200;
 
 var ShieldColour = "#00BFFF";
 
-DebugOn = false;
+DebugOn = true;
 
 /*******************************/
 /* Scoring
@@ -196,7 +196,7 @@ function AccountantShieldOff() {
 }
 
 function shieldOff() {
-  accountantColor = accountant.getBaseColour();
+    accountant.setAccountantColor(accountant.getBaseColour());
 }
 
 function IsProtected(){
@@ -204,15 +204,15 @@ function IsProtected(){
 }
 
 function IsInStrikeZone(){
-    return strikeZone >= accountant.getpositionX()-widthOfDeathZone && strikeZone <= accountant.getpositionX()+widthOfDeathZone
+    return strikeZone >= accountant.getPositionX()-widthOfDeathZone && strikeZone <= accountant.getPositionX()+widthOfDeathZone
 }
 
 function KillPerson(){
   console.log("Dead");
-  accountantColor = accountant.getDeadColour();
+  accountant.setAccountantColor(accountant.getDeadColour());
   NumberOfDeaths +=1;
   setTimeout(function () {
-    accountantColor = accountant.getBaseColour();
+      accountant.setAccountantColor(accountant.getBaseColour());
   }, 1000);
 }
 
@@ -232,9 +232,9 @@ function ShowDebugInformation(show){
         ctxDebug.clearRect ( 0 , 0 , infoWidth , height );
 
         ctxDebug.font = "12px sans-serif";
-        ctxDebug.fillText("accountantDirection = " + accountantDirection, x, y);
-        ctxDebug.fillText("accountantSpeed = " + accountantSpeed, x, y * 2);
-        ctxDebug.fillText("accountantX = " + accountantX, x, y * 3);
+        //ctxDebug.fillText("accountantDirection = " + accountant.direction, x, y);
+        ctxDebug.fillText("accountantSpeed = " + accountant.speed(), x, y * 2);
+        ctxDebug.fillText("accountantX = " + accountant.getPositionX(), x, y * 3);
         ctxDebug.fillText("deathCloudX = " + deathCloudX, x, y * 4);
         ctxDebug.fillText("deathCloudY = " + deathCloudY, x, y* 5);
         ctxDebug.fillText("lightningHeight = " + lightningHeight, x, y * 6);
@@ -326,7 +326,7 @@ var GameLoop = function(){
 
   }
   else{
-    ctx.fillStyle = deadAccountantColor;
+    ctx.fillStyle = accountant.getDeadColour();
     ctx.font = "60px sans-serif";
     ctx.fillText("Game Over", 300, 330);
     ctx.font = "40px sans-serif";

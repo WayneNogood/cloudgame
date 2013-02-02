@@ -2,7 +2,6 @@ var accountant = (function() {
 
     var accountantSpeed = 2;
     var accountantDirection = 0; // -1 0, +1
-
     var defaultAccountantColor =  "#000000";
     var deadAccountantColor = "#ff0000";
     var accountantColor = defaultAccountantColor;
@@ -74,24 +73,21 @@ var accountant = (function() {
 
             ctx.restore();
         },
-        color: function(f){
-
-        },
-        move: function(f){
+        move: function(){
             accountantX += accountantSpeed * accountantDirection;
             if (accountantX < 0) accountantX = 0;
             if (accountantX > width) accountantX = width;
         },
-        speed: function(f){
-
+        speed: function(){
+            return accountantSpeed;
         },
         direction: function(f){
             accountantDirection = f;
         },
-        getpositionX: function(){
+        getPositionX: function(){
             return accountantX;
         },
-        getpositionY: function(){
+        getPositionY: function(){
             return accountantY;
         },
         getBaseColour: function(){
@@ -103,7 +99,7 @@ var accountant = (function() {
         setAccountantColor: function(f){
             accountantColor = f;
         },
-        getDeadColour: function(f){
+        getDeadColour: function(){
             return deadAccountantColor;
         }
     };
