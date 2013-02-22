@@ -5,28 +5,55 @@
     var scoreTracker = (function() {
 
         var score = 0;
-        var NogoodCloudHighScore = "highScore";
-        var canSaveHighestScore = false;
+        var highScore = 0;
+        var localStorageAccess = false;
+        var highScoreStorageValue = "NogoodCloudHighScore";
+
+        function getDataFromLocalStorage(item){
+            if(localStorage.getItem(item) === null)
+                return 0;
+            return localStorage.NogoodCloudHighScore;
+        }
 
         var me = {
 
             init: function(){
-                canSaveHighestScore = typeof(Storage)!=="undefined";
+                localStorageAccess = typeof(Storage)!== "undefined";
+                if(localStorageAccess){
+                    highScore = getDataFromLocalStorage(highScoreStorageValue);
+                }
+                else
+                    highScore = "N/A";
             },
-            updateScore: function(f){
-                if(score > getHighestScore())
-                return score += f;
+
+            setScore: function(f, g){
+                var currentTime = new Date().getTime();
+                score = Math.floor((currentTime - f) * g/ 10);
+                return score;
+            },
+
+            getScore: function(){
+                return score;
+            },
+
+            canSaveHighestScore: function(){
+                return localStorageAccess;
             },
 
             getHighestScore: function(){
-                if(canSaveHighestScore)
-                    return localStorage.NogoodCloudHighScore;
+                if(localStorageAccess){
+                    if(score > getDataFromLocalStorage(highScoreStorageValue)){
+                        localStorage.NogoodCloudHighScore = score;
+                        return score;
+                    }
+                    return getDataFromLocalStorage(highScoreStorageValue);
+                }
                 return undefined;
             },
 
             setHighestScore: function(f){
-                if(canSaveHighestScore)
-                    return localStorage.NogoodCloudHighScore = f;
+                if(localStorageAccess)
+                    return localStorage.NogoodCloudHighScore = highScore;
                 return undefined;
             }
         };

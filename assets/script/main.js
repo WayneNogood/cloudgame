@@ -52,15 +52,6 @@ var maxWidthOfDeathZone = 200;
 
 DebugOn = true;
 
-/*******************************/
-/* Scoring
-/*******************************/
-
-var Score = function(){
-  var currentTime = new Date().getTime();
-  return Math.floor((currentTime - startTime) * currentLevel/ 10);
-};
-
 
 /*******************************/
 /* level hardness controls
@@ -243,7 +234,7 @@ function ShowDebugInformation(show){
         ctxDebug.fillText("deathCloudSpeed = " + deathCloudSpeed, x, y * 11);
         ctxDebug.fillText("strikeZone = " + strikeZone, x, y * 12);
         ctxDebug.fillText("startTime = " + startTime, x, y * 13);
-        ctxDebug.fillText("score = " + Score(), x, y * 14);
+        ctxDebug.fillText("score = " + scoreTracker.getScore(), x, y * 14);
         ctxDebug.fillText("currentLevel = " + currentLevel, x, y * 15);
         ctxDebug.fillText("speedIncrementStepSize = " + speedIncrementStepSize, x, y * 16);
         ctxDebug.fillText("widthOfDeathZone = " + widthOfDeathZone, x, y * 17);
@@ -255,16 +246,18 @@ function ShowDebugInformation(show){
 /* SCORING INFO
 /*******************************/
 function ShowScoringInformation(){
-    
+
+    scoreTracker.init();
     var x = 15;
     var y = 25; 
     ctxScore.clearRect ( 0 , 0 , infoWidth , height );
 
     ctxScore.font = "20px sans-serif";
-    ctxScore.fillText("Score: " + Score(), x, y);
+    scoreTracker.setScore(startTime, currentLevel);
+    ctxScore.fillText("Score: " + scoreTracker.getScore(), x, y);
     ctxScore.fillText("Lives Remaining: " + (NumberOfDeathsAllowed - NumberOfDeaths), x, y * 2);
     ctxScore.fillText("Shield Time (a): " + (shield.power()), x, y * 3);
-
+    ctxScore.fillText("Highest Score: " + scoreTracker.getHighestScore(), x, y * 4);
 }
 
 
@@ -329,15 +322,16 @@ var GameLoop = function(){
     ctx.fillText("Game Over", 300, 330);
     ctx.font = "40px sans-serif";
     ctx.fillStyle = '#000';
-    ctx.fillText("Score: " + Score(), 350, 400);
-  }
+    ctx.fillText("Score: " + scoreTracker.getScore(), 350, 400);
+     if(scoreTracker.getScore() == scoreTracker.getHighestScore()){
+        ctx.fillText("New High Score!!! ", 350, 470);
+     }
+
+ }
   
   ShowScoringInformation();
   ShowDebugInformation(DebugOn);
-//    scoreTracker.init();
-//    alert("scoreTracker.canSaveHighestScore " + scoreTracker.canSaveHighestScore);
-//    scoreTracker.setHighestScore(10);
-//    alert("scoreTracker.getHighestScore " + scoreTracker.getHighestScore());
+
 };
 
 
