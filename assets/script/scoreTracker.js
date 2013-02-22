@@ -15,6 +15,10 @@
             return localStorage.NogoodCloudHighScore;
         }
 
+        function setDataFromLocalStorage(item, value){
+            localStorage.setItem(item, value);
+        }
+
         var me = {
 
             init: function(){
@@ -43,7 +47,7 @@
             getHighestScore: function(){
                 if(localStorageAccess){
                     if(score > getDataFromLocalStorage(highScoreStorageValue)){
-                        localStorage.NogoodCloudHighScore = score;
+                        setDataFromLocalStorage(highScoreStorageValue, score);
                         return score;
                     }
                     return getDataFromLocalStorage(highScoreStorageValue);
@@ -53,7 +57,7 @@
 
             setHighestScore: function(f){
                 if(localStorageAccess)
-                    return localStorage.NogoodCloudHighScore = highScore;
+                    setDataFromLocalStorage(highScoreStorageValue, highScore);
                 return undefined;
             }
         };

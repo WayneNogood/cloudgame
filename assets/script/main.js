@@ -61,7 +61,8 @@ var speedIncrement = function(){
   var currentTime = new Date().getTime();
   var time = currentTime - startTime;
   var isIncrementTime = time % speedIncrementStepSize;
- 
+
+    //need to deal with -ve speed when incrementing
   if(isIncrementTime < 10){   
     if(deathCloudSpeed < 4){//this hard codes the max speed to < 4
       deathCloudSpeed += 0.1;
@@ -155,8 +156,8 @@ function LightUpGround(){
 /* MOVEMENT
 /*******************************/
 function BounceSideToSide(){
-  if(deathCloudX <= -500 || deathCloudX >= 775){
-        speed = -speed;
+  if(deathCloudX <= -140 || deathCloudX >= 501){
+      deathCloudSpeed = -deathCloudSpeed;
     }
 }
 
@@ -302,7 +303,12 @@ var GameLoop = function(){
 
     deathCloudX += deathCloudSpeed ;
 
-    MoveAcrossScreen();
+    if(scoreTracker.getScore() < 5000){
+        MoveAcrossScreen();
+    }
+    else{
+        BounceSideToSide();
+    }
     Strike();
     DeathCloud(deathCloudX , deathCloudY);
 
