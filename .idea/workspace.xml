@@ -20,14 +20,10 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="main.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="main.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/assets/script/main.js">
           <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
-            <state line="322" column="28" selection-start="9015" selection-end="9015" vertical-scroll-proportion="0.10048623">
-=======
-            <state line="340" column="2" selection-start="9423" selection-end="9423" vertical-scroll-proportion="0.5431472">
->>>>>>> Minor changes and refactor
+            <state line="329" column="33" selection-start="9184" selection-end="9184" vertical-scroll-proportion="-5.923077">
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -38,7 +34,7 @@
       <file leaf-file-name="weather.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/assets/script/weather.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="18" selection-start="97" selection-end="97" vertical-scroll-proportion="0.0">
+            <state line="24" column="5" selection-start="423" selection-end="423" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -47,14 +43,19 @@
       <file leaf-file-name="accountant.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/assets/script/accountant.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="106" column="14" selection-start="319" selection-end="3142" vertical-scroll-proportion="0.0">
-<<<<<<< HEAD
+            <state line="88" column="31" selection-start="2731" selection-end="2731" vertical-scroll-proportion="0.0">
               <folding />
-=======
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="scoreTracker.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/assets/script/scoreTracker.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="14" selection-start="655" selection-end="655" vertical-scroll-proportion="0.5714286">
               <folding>
-                <element signature="e#359#2253#0" expanded="false" />
+                <element signature="n#!!doc" expanded="true" />
               </folding>
->>>>>>> Minor changes and refactor
             </state>
           </provider>
         </entry>
@@ -62,11 +63,7 @@
       <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
-            <state line="20" column="7" selection-start="660" selection-end="660" vertical-scroll-proportion="0.0">
-=======
-            <state line="20" column="7" selection-start="660" selection-end="660" vertical-scroll-proportion="-12.5">
->>>>>>> Minor changes and refactor
+            <state line="21" column="7" selection-start="717" selection-end="717" vertical-scroll-proportion="-13.125">
               <folding />
             </state>
           </provider>
@@ -96,9 +93,10 @@
       <list>
         <option value="$PROJECT_DIR$/assets/script/shield.js" />
         <option value="$PROJECT_DIR$/assets/script/accountant.js" />
-        <option value="$PROJECT_DIR$/index.html" />
-        <option value="$PROJECT_DIR$/assets/script/main.js" />
         <option value="$PROJECT_DIR$/assets/script/weather.js" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/assets/script/scoreTracker.js" />
+        <option value="$PROJECT_DIR$/assets/script/main.js" />
       </list>
     </option>
   </component>
@@ -210,11 +208,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-<<<<<<< HEAD
     <frame x="41" y="22" width="1239" height="778" extended-state="0" />
-=======
-    <frame x="41" y="22" width="1239" height="778" extended-state="7" />
->>>>>>> Minor changes and refactor
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -350,34 +344,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/assets/script/shield.js">
+    <entry file="file://$PROJECT_DIR$/assets/script/weather.js">
       <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
-        <state line="20" column="7" selection-start="660" selection-end="660" vertical-scroll-proportion="0.0">
-=======
-        <state line="17" column="10" selection-start="456" selection-end="456" vertical-scroll-proportion="0.0">
->>>>>>> Minor changes and refactor
+        <state line="24" column="5" selection-start="423" selection-end="423" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-<<<<<<< HEAD
-    <entry file="file://$PROJECT_DIR$/assets/script/accountant.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="106" column="14" selection-start="319" selection-end="3142" vertical-scroll-proportion="0.0">
-=======
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="7" selection-start="660" selection-end="660" vertical-scroll-proportion="-12.5">
->>>>>>> Minor changes and refactor
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/assets/script/weather.js">
-      <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
-        <state line="6" column="18" selection-start="97" selection-end="97" vertical-scroll-proportion="0.0">
+        <state line="21" column="7" selection-start="717" selection-end="717" vertical-scroll-proportion="-13.125">
           <folding />
         </state>
       </provider>
@@ -386,29 +362,28 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="10" selection-start="456" selection-end="456" vertical-scroll-proportion="0.0">
           <folding />
-=======
-        <state line="106" column="14" selection-start="319" selection-end="3142" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#359#2253#0" expanded="false" />
-          </folding>
->>>>>>> Minor changes and refactor
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/assets/script/weather.js">
+    <entry file="file://$PROJECT_DIR$/assets/script/accountant.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="18" selection-start="97" selection-end="97" vertical-scroll-proportion="0.0">
+        <state line="88" column="31" selection-start="2731" selection-end="2731" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/assets/script/main.js">
       <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
-        <state line="322" column="28" selection-start="9015" selection-end="9015" vertical-scroll-proportion="0.10048623">
-=======
-        <state line="340" column="2" selection-start="9423" selection-end="9423" vertical-scroll-proportion="0.5431472">
->>>>>>> Minor changes and refactor
+        <state line="329" column="33" selection-start="9184" selection-end="9184" vertical-scroll-proportion="-5.923077">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/script/scoreTracker.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="14" selection-start="655" selection-end="655" vertical-scroll-proportion="0.5714286">
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>

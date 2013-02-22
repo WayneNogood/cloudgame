@@ -4,6 +4,7 @@ var accountant = (function() {
     var accountantDirection = 0; // -1 0, +1
     var defaultAccountantColor =  "#000000";
     var deadAccountantColor = "#ff0000";
+    var protectedAccountantColor = "#00BFFF";
     var accountantColor = defaultAccountantColor;
     var accountantX = 40;
     var accountantY = 0;
@@ -92,6 +93,9 @@ var accountant = (function() {
         },
         getBaseColour: function(){
             return defaultAccountantColor;
+        },
+        getProtectedColour: function(){
+            return protectedAccountantColor;
         },
         getAccountantColor: function(){
             return accountantColor;

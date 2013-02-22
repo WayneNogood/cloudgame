@@ -49,7 +49,6 @@ var lightningKillStrength = 20;
 var widthOfDeathZone = 20;
 var maxWidthOfDeathZone = 200;
 
-var ShieldColour = "#00BFFF";
 
 DebugOn = true;
 
@@ -187,7 +186,7 @@ function ShouldIKillPerson(){
 
 function AccountantShieldOn(){
   shield.turnOn(function() {
-      accountant.setAccountantColor(ShieldColour);
+      accountant.setAccountantColor(accountant.getProtectedColour());
   });
 }
 
@@ -208,7 +207,6 @@ function IsInStrikeZone(){
 }
 
 function KillPerson(){
-  console.log("Dead");
   accountant.setAccountantColor(accountant.getDeadColour());
   NumberOfDeaths +=1;
   setTimeout(function () {
@@ -247,7 +245,6 @@ function ShowDebugInformation(show){
         ctxDebug.fillText("startTime = " + startTime, x, y * 13);
         ctxDebug.fillText("score = " + Score(), x, y * 14);
         ctxDebug.fillText("currentLevel = " + currentLevel, x, y * 15);
-
         ctxDebug.fillText("speedIncrementStepSize = " + speedIncrementStepSize, x, y * 16);
         ctxDebug.fillText("widthOfDeathZone = " + widthOfDeathZone, x, y * 17);
         ctxDebug.fillText("lightningKillStrength = " + lightningKillStrength, x, y * 18);
@@ -303,7 +300,8 @@ var GameLoop = function(){
  if(NumberOfDeaths < NumberOfDeathsAllowed){
 
     clear();
-    reqAnimFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
+    reqAnimFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame
+        || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
     reqAnimFrame(GameLoop);
 
     speedIncrement();
@@ -336,8 +334,10 @@ var GameLoop = function(){
   
   ShowScoringInformation();
   ShowDebugInformation(DebugOn);
-    alert(weather.cloud.c());
-    alert(weather.lightning.c());
+//    scoreTracker.init();
+//    alert("scoreTracker.canSaveHighestScore " + scoreTracker.canSaveHighestScore);
+//    scoreTracker.setHighestScore(10);
+//    alert("scoreTracker.getHighestScore " + scoreTracker.getHighestScore());
 };
 
 
@@ -345,8 +345,9 @@ var GameLoop = function(){
 /*******************************/
 /* RUN MAIN
 /*******************************/
-GameLoop();
 BindMouseEvents();
+GameLoop();
+
 
 
 

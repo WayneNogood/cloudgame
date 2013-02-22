@@ -1,7 +1,7 @@
 var weather = (function() {
 
 
-        function cloud() {
+      /*  function cloud() {
             return {
 
                 c: function () {
@@ -20,6 +20,6 @@ var weather = (function() {
         }
 
         return {cloud: cloud, lightning: lightning};
-
+*/
 
 })();
