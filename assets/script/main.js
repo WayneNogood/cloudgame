@@ -336,6 +336,8 @@ var GameLoop = function(){
   
   ShowScoringInformation();
   ShowDebugInformation(DebugOn);
+    alert(weather.cloud.c());
+    alert(weather.lightning.c());
 };
 
 
