@@ -61,11 +61,14 @@ var speedIncrement = function(){
   var currentTime = new Date().getTime();
   var time = currentTime - startTime;
   var isIncrementTime = time % speedIncrementStepSize;
-
+  var increment = 0.1;
+    if(deathCloudSpeed < 0){//negative
+        increment = -0.1;
+    }
     //need to deal with -ve speed when incrementing
   if(isIncrementTime < 10){   
     if(deathCloudSpeed < 4){//this hard codes the max speed to < 4
-      deathCloudSpeed += 0.1;
+      deathCloudSpeed += increment;
     }
   }
 };
@@ -156,7 +159,8 @@ function LightUpGround(){
 /* MOVEMENT
 /*******************************/
 function BounceSideToSide(){
-  if(deathCloudX <= -140 || deathCloudX >= 501){
+
+  if(deathCloudX <= -300 || deathCloudX >= 610){
       deathCloudSpeed = -deathCloudSpeed;
     }
 }
@@ -303,7 +307,9 @@ var GameLoop = function(){
 
     deathCloudX += deathCloudSpeed ;
 
-    if(scoreTracker.getScore() < 5000){
+    //take out hard coded comparison
+    //add more variation
+    if(scoreTracker.getScore() < 4000){
         MoveAcrossScreen();
     }
     else{
